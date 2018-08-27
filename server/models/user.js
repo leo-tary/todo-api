@@ -37,7 +37,7 @@ userSchema.methods.generateAuthToken = function() {
             _id:this._id , 
             email:this.email
         } , 
-        config.get("jwtPrivateKey"));
+        config.get("todoAppKey"));
 
     return token;
 

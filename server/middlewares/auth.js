@@ -10,7 +10,7 @@ module.exports.verifyUser = (req , res , next) => {
             res.status(401).send(`Invalid request...`);
             return;
         }
-        const decodedUser = jwt.verify(token , config.get('jwtPrivateKey'))
+        const decodedUser = jwt.verify(token , config.get('todoAppKey'))
         req.body.user = decodedUser;
 
     }catch(ex){

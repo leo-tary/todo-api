@@ -1,4 +1,9 @@
-
+/**
+ *  docs:
+ *  http://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html
+ *  http://mongoosejs.com/docs/guide.html
+ */
+const fs = require('fs');
 const {prettyPrint} = require('./utility');         // Destructure
 
 // const MongoClient = require('mongodb').MongoClient;     // returns function
@@ -36,7 +41,47 @@ MongoClient.connect('mongodb://localhost:27017/playground' , {useNewUrlParser: t
     const db = client.db(dbName);       // DB is set here (playground)
 
 
-    // db.collection('Todos').insertOne({
+
+    // db.collection('PerformanceTest').deleteMany({})
+    //                                 .then((res) => {
+    //                                     console.log(prettyPrint(res));
+    //                                 })
+    //                                 .catch((err) => {
+    //                                     console.log(err);
+    //                                 })
+
+
+
+    // const startTime = new Date().getMilliseconds();
+    const incr = 0;    
+    for(let counter = 1; counter<= 15000 ; counter++){
+
+        const startTime = new Date().getMilliseconds();
+        db.collection('PerformanceTest').insert({
+            name:'PerformanceRecord'+ counter,
+            text: 'Some text for performance' + counter,
+            isCompleted: false
+        } , (err , result) => {
+
+            if(err)
+                return console.log(`Unable to insert new document...${err}`);
+            
+                // console.log(prettyPrint(result.ops));
+                
+                const endTime = new Date().getMilliseconds();
+                const totalTimeTaken = endTime - startTime;
+                incr += totalTimeTaken;
+                console.log(`Time Taken to insert 1 record: ${totalTimeTaken} ms`);
+        })
+
+    }
+        
+    console.log(`Total Time Taken to insert records: ${incr} ms`);
+    fs.appendFileSync('performaceMongoNative.json' , `\nTotal Time Taken to insert records: ${incr} ms`);
+    
+
+    // db.collection('PerformanceTest').insertOne({
+    //     name:'PerformanceRecord'+ i,
     //     text: 'Some text for todos',
     //     isCompleted: false
     // } , (err , result) => {
@@ -48,14 +93,14 @@ MongoClient.connect('mongodb://localhost:27017/playground' , {useNewUrlParser: t
     // })
 
 
-    insertedDocument(db , (err , result) => {
+    // insertedDocument(db , (err , result) => {
 
-        if(err)
-            return console.log(`Error inserting document...${err}`);
+    //     if(err)
+    //         return console.log(`Error inserting document...${err}`);
         
-        console.log(prettyPrint(result.ops));
+    //     console.log(prettyPrint(result.ops));
 
-    });
+    // });
 
 
     client.close();
@@ -83,5 +128,21 @@ let insertedDocument = (db , callback) => {
 
 }
 
+let readFileData = () => {
+
+    try{
+        const readFile = fs.readFileSync('performaceMongoNative.json');
+        // console.log(JSON.parse(readFile));
+        const fileData = JSON.parse(readFile);
+        return fileData;
+    }catch(ex){
+        return [];
+    }
+
+}
+
+
+
         // .then(() => console.log("Connected to mongodb...."))
         // .catch((err) => console.log(`error connecting mongodb...${err}`));
+

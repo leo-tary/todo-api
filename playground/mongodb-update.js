@@ -15,10 +15,10 @@ MongoClient.connect('mongodb://localhost:27017/playground' , { useNewUrlParser: 
                                     },
                                     {
                                         "$inc":{
-                                            "age":-33
+                                            "age":-1
                                         },
                                         "$set":{
-                                            "name":"Robo Mongo"
+                                            "name":"Mongo Compass"
                                         }
                                     },
                                     {"returnOriginal":false}
